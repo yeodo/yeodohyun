@@ -17,6 +17,7 @@ from explosion import Enemy_explosion
 from bomb import Bomb
 from explosion import Bomb_explosion
 from item import Item
+from ui import UI
 
 import game_framework
 import characterselect_state
@@ -78,13 +79,14 @@ class Timer:
 
 def enter():
     global timer, player, map, Player_missile, FirstEnemys, SecondEnemys, enemy_missile, enemy_explosion, bomb, bomb_explosion, item, boss, boss_missile
-    global angle
+    global angle, ui
     timer = Timer()
     player = Player()
     player.kind = 2
     map = Map()
     map.kind = 2
 
+    ui = UI()
     bomb = []
     FirstEnemys = []
     SecondEnemys = []
@@ -177,6 +179,9 @@ def update():
     global angle
     global Bossdie
     global player
+    global ui
+
+    ui.update()
     if Bossdie == 0:
         timer.update()
     player.update()
@@ -392,6 +397,7 @@ def update():
     print ("score %d" %(score))
 def draw():
     global BoundingBox
+    global ui
     clear_canvas()
 
     map.draw()
@@ -441,5 +447,5 @@ def draw():
                 for member in boss_missile:
                     member.draw_bb()
 
-
+    ui.draw()
     update_canvas()

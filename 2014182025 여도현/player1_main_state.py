@@ -17,7 +17,7 @@ from explosion import Enemy_explosion
 from bomb import Bomb
 from explosion import Bomb_explosion
 from item import Item
-
+from ui import UI
 import game_framework
 import characterselect_state
 
@@ -28,11 +28,9 @@ global startspeed
 global selectcharacter
 global Player_missile
 global timer
-global score
 global BoundingBox
 global BossAppear
 global Bossdie
-score = 0
 BoundingBox= 0
 Bossdie = 0
 sound = 0
@@ -78,13 +76,14 @@ class Timer:
 
 def enter():
     global timer, player, map, Player_missile, FirstEnemys, SecondEnemys, enemy_missile, enemy_explosion, bomb, bomb_explosion, item, boss, boss_missile
-    global angle
+    global angle, ui
     timer = Timer()
     player = Player()
     player.kind = 1
     map = Map()
     map.kind = 1
 
+    ui = UI()
     bomb = []
     FirstEnemys = []
     SecondEnemys = []
@@ -94,12 +93,12 @@ def enter():
     bomb_explosion = []
     item = []
     boss = []
-    boss_missile = [Boss_missile(10,10 ) for i in range(120)]
+    boss_missile = [Boss_missile(10,10 ) for i in range(72)]
     for member in boss_missile:
+        angle += 10
+        if angle >360 :
+            member.y +=400
         member.angle = angle
-        angle += 8
-        if angle >180 :
-            angle = 0
 def exit():
     global timer, player, map, Player_missile, FirstEnemys, SecondEnemys, enemy_missile, enemy_explosion, bomb, bomb_explosion, item, boss, boss_missile
     del(timer)
@@ -136,7 +135,7 @@ def handle_events():
                 game_framework.quit()
             else:
                 player.handle_event(event)
-                if event.type == SDL_KEYDOWN and event.key == SDLK_SPACE and player.state == 1:
+                if event.type == SDL_KEYDOWN and event.key == SDLK_SPACE and player.state != 0:
                     player.missile_sound.play()
                     newmissile = Missile(player.x, player.y)
                     if player.missile_level == 1:
@@ -145,7 +144,7 @@ def handle_events():
                         newmissile.level = 1
 
                     Player_missile.append(newmissile)
-                if event.type == SDL_KEYDOWN and event.key == SDLK_b and player.state == 1:
+                if event.type == SDL_KEYDOWN and event.key == SDLK_b and player.state!= 0:
                     newbomb = Bomb(player.x, player.y)
                     newbomb.angle = 3
                     bomb.append(newbomb)
@@ -153,11 +152,13 @@ def handle_events():
                     newbomb.angle = -3
                     newbomb.angle = -3
                     bomb.append(newbomb)
-                if event.type == SDL_KEYDOWN and event.key == SDLK_h and player.state == 1:
+                if event.type == SDL_KEYDOWN and event.key == SDLK_h and player.state != 0:
                     if BoundingBox == 0:
                         BoundingBox = 1
                     elif BoundingBox == 1:
                         BoundingBox = 0
+                if event.type == SDL_KEYDOWN and event.key == SDLK_q:
+                    ui.score =205
 
 def collide(a, b):
     left_a, bottom_a, right_a, top_a = a.get_bb()
@@ -171,12 +172,14 @@ def collide(a, b):
     return True
 
 def update():
-    global score
     global BoundingBox
     global sound
     global angle
     global Bossdie
     global player
+    global ui
+
+    ui.update()
     if Bossdie == 0:
         timer.update()
     player.update()
@@ -261,7 +264,7 @@ def update():
                 enemy_explosion.append(newexplosion);
                 Player_missile.remove(missile)
                 FirstEnemys.remove(enemy)
-                score += 5
+                ui.score += 5
 
     for missile in Player_missile:
         for enemy in SecondEnemys:
@@ -271,7 +274,7 @@ def update():
                 Player_missile.remove(missile)
                 if enemy.count >= 3:
                     SecondEnemys.remove(enemy)
-                    score += 10
+                    ui.score += 10
                     newexplosion = Enemy_explosion(enemy.x, enemy.y)
                     newexplosion.secondenemy_explosion_sound.play()
                     enemy_explosion.append(newexplosion);
@@ -300,12 +303,12 @@ def update():
             if member.frame >3:
                 if collide(enemy,member):
                     FirstEnemys.remove(enemy)
-                    score += 5
+                    ui.score += 5
         for enemy in SecondEnemys:
             if member.frame >3:
                 if collide(enemy,member):
                     SecondEnemys.remove(enemy)
-                    score += 10
+                    ui.score += 10
         for enemy in enemy_missile:
             if member.frame >3:
                 if collide(enemy,member):
@@ -327,7 +330,7 @@ def update():
             player.missile_level = 2
             player.missile_sound = load_wav('resource\\sound\\player_missile_level2.ogg')
             player.missile_sound.set_volume(60)
-    if score == 210 or score == 205:
+    if ui.score == 210 or ui.score == 205:
         newBoss = Boss()
         boss.append(newBoss)
         for member in boss:
@@ -335,16 +338,19 @@ def update():
                 member.appear_sound.play()
                 member.sound.repeat_play()
                 member.appear = 1
-                score +=1
+                ui.score +=1
     for member in boss:
         member.update()
         if member.appear == 1:
             if member.y <= 650:
                 for missile in boss_missile:
                     missile.update()
-                    if missile.x < 0 or missile.x > 600 or missile.y<0 or missile.y > 800:
+                    if missile.type != 1 and (missile.x < 0 or missile.x > 600 or missile.y<0 or missile.y > 800):
                         missile.x, missile.y = 250, 600
-                        missile.type = random.randint(1, 3)
+                        missile.angle = random.randint(10 , 170)
+                        missile.type = random.randint(1, 4)
+                        if missile.angle >180 :
+                             missile.angle =  missile.angle % 180
 
     for member in boss:
         for missile in Player_missile:
@@ -355,7 +361,6 @@ def update():
                     enemy_explosion.append(newexplosion);
                     Player_missile.remove(missile)
                     member.life -= player.missile_level
-                    print ("boss %d" %(member.life))
         for explosion in bomb_explosion:
             if collide(member,explosion):
                 member.life -= 1
@@ -377,21 +382,27 @@ def update():
     if player.state == 1:
         for missile in boss_missile:
             if collide(missile,player):
+                player.image = load_image('resource\\player\\player1_hit_animation.png')
+                player.state = 2
                 boss_missile.remove(missile)
                 newexplosion = Enemy_explosion(missile.x, missile.y)
                 newexplosion.firstenemy_explosion_sound.play()
                 enemy_explosion.append(newexplosion);
+                ui.playerlife+=1
 
         for missile in enemy_missile:
             if collide(missile,player):
+                player.image = load_image('resource\\player\\player1_hit_animation.png')
+                player.state = 2
                 enemy_missile.remove(missile)
                 newexplosion = Enemy_explosion(missile.x, missile.y)
                 newexplosion.firstenemy_explosion_sound.play()
                 enemy_explosion.append(newexplosion);
+                ui.playerlife+=1
 
-    print ("score %d" %(score))
 def draw():
     global BoundingBox
+    global ui
     clear_canvas()
 
     map.draw()
@@ -419,6 +430,7 @@ def draw():
             for member in boss_missile:
                 member.draw()
 
+
     if BoundingBox == 1:
         if player.state == 1:
             player.draw_bb()
@@ -441,5 +453,5 @@ def draw():
                 for member in boss_missile:
                     member.draw_bb()
 
-
+    ui.draw()
     update_canvas()

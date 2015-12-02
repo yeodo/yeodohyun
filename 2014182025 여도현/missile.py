@@ -72,16 +72,21 @@ class Boss_missile:
 
     def update(self):
         if self.type == 1:
-            self.x -= 20*math.cos( self.angle * 3.14 / 180)
-            self.y -= 20*math.sin( self.angle * 3.14 / 180)
-        if self.type == 3:
+            self.y -= 20
+            if self.y == 500:
+                self.type = 4
+        if self.type == 2:
             self.x -= 15*math.cos( self.angle * 3.14 / 180)
             self.y -= 20*math.sin( self.angle * 3.14 / 180)
-        if self.type == 2:
+        if self.type == 3:
             self.x -= 20*math.cos( self.angle * 3.14 / 180)
             self.y -= 10*math.sin( self.angle * 3.14 / 180)
+        if self.type == 4:
+            self.x -= 20*math.cos( self.angle * 3.14 / 180)
+            self.y -= 20*math.sin( self.angle * 3.14 / 180)
     def draw(self):
-        self.image.clip_draw(0, 0, 18, 18, self.x, self.y )
+        if self.y < 601:
+            self.image.clip_draw(0, 0, 18, 18, self.x, self.y )
 
     def draw_bb(self):
         draw_rectangle(*self.get_bb())
