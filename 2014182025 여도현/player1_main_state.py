@@ -20,6 +20,7 @@ from item import Item
 from ui import UI
 import game_framework
 import characterselect_state
+import score_state
 
 
 name = "MainState"
@@ -352,6 +353,27 @@ def update():
                         if missile.angle >180 :
                              missile.angle =  missile.angle % 180
 
+    if player.state == 1:
+        for missile in boss_missile:
+            if collide(missile,player):
+                player.image = load_image('resource\\player\\player1_hit_animation.png')
+                player.state = 2
+                boss_missile.remove(missile)
+                newexplosion = Enemy_explosion(missile.x, missile.y)
+                newexplosion.firstenemy_explosion_sound.play()
+                enemy_explosion.append(newexplosion);
+                ui.playerlife-=1
+
+        for missile in enemy_missile:
+            if collide(missile,player):
+                player.image = load_image('resource\\player\\player1_hit_animation.png')
+                player.state = 2
+                enemy_missile.remove(missile)
+                newexplosion = Enemy_explosion(missile.x, missile.y)
+                newexplosion.firstenemy_explosion_sound.play()
+                enemy_explosion.append(newexplosion);
+                ui.playerlife-=1
+
     for member in boss:
         for missile in Player_missile:
             if member.y <= 650:
@@ -365,6 +387,10 @@ def update():
             if collide(member,explosion):
                 member.life -= 1
     for member in boss:
+        if member.life == -30 :
+            boss.remove(member)
+            game_framework.change_state(score_state)
+    for member in boss:
         if member.life <= 0 :
             for enemy in FirstEnemys:
                 FirstEnemys.remove(enemy)
@@ -377,28 +403,7 @@ def update():
             for missile in Player_missile:
                 Player_missile.remove(missile)
             Bossdie = 1
-            boss.remove(member)
-
-    if player.state == 1:
-        for missile in boss_missile:
-            if collide(missile,player):
-                player.image = load_image('resource\\player\\player1_hit_animation.png')
-                player.state = 2
-                boss_missile.remove(missile)
-                newexplosion = Enemy_explosion(missile.x, missile.y)
-                newexplosion.firstenemy_explosion_sound.play()
-                enemy_explosion.append(newexplosion);
-                ui.playerlife+=1
-
-        for missile in enemy_missile:
-            if collide(missile,player):
-                player.image = load_image('resource\\player\\player1_hit_animation.png')
-                player.state = 2
-                enemy_missile.remove(missile)
-                newexplosion = Enemy_explosion(missile.x, missile.y)
-                newexplosion.firstenemy_explosion_sound.play()
-                enemy_explosion.append(newexplosion);
-                ui.playerlife+=1
+            member.life = -1
 
 def draw():
     global BoundingBox
@@ -432,8 +437,7 @@ def draw():
 
 
     if BoundingBox == 1:
-        if player.state == 1:
-            player.draw_bb()
+        player.draw_bb()
         for member in FirstEnemys:
             member.draw_bb()
         for member in SecondEnemys:

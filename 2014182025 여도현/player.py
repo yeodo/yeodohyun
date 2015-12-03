@@ -95,9 +95,10 @@ class Player:
 
         delay(0.07)
 
-    def draw_bb(self):1
+    def draw_bb(self):
+        draw_rectangle(*self.get_bb())
     def get_bb(self):
-        return self.x - 20, self.y - 25 , self.x + 18, self.y + 25
+        return self.x - 15, self.y - 25 , self.x + 13, self.y + 25
 
     def draw(self):
         if self.state == 0:
