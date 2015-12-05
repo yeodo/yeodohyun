@@ -13,6 +13,7 @@ class Player:
         self.state = 0      # 0일 때 등장애니메이션 1일 때 이동애니
         self.missile_level = 1
         self.hit = 0
+        self.timer = 0
         self.missile_sound = load_wav('resource\\sound\\player_missile_level1.ogg')
         self.missile_sound.set_volume(60)
         self.get_sound = load_wav('resource\\sound\\item_get.wav')
@@ -91,7 +92,7 @@ class Player:
                 self.state = 1
                 self.hit = 0
                 self.image = load_image('resource\\player\\player1_animation.png')
-            print('hit %d' %self.hit)
+            #print('hit %d' %self.hit)
 
         delay(0.07)
 

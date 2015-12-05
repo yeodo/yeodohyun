@@ -6,8 +6,8 @@ from ui import UI
 name = "ScoreState"
 image = None
 def enter():
-    global image
-
+    global image, ui
+    ui = UI()
     image = load_image('resource\\score.png')
 
 def exit():
@@ -26,8 +26,10 @@ def handle_events():
 
 
 def draw():
+    global image, ui
     clear_canvas()
     image.draw(250,375)
+    ui.scoredraw()
     update_canvas()
 
 

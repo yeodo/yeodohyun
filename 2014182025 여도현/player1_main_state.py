@@ -315,8 +315,8 @@ def update():
                 if collide(enemy,member):
                     enemy_missile.remove(enemy)
         for missile in boss_missile:
-            missile.update()
             if collide(missile,member):
+                missile.update()
                 missile.x, missile.y = 250, 600
                 missile.type = random.randint(1, 3)
 
@@ -387,10 +387,6 @@ def update():
             if collide(member,explosion):
                 member.life -= 1
     for member in boss:
-        if member.life == -30 :
-            boss.remove(member)
-            game_framework.change_state(score_state)
-    for member in boss:
         if member.life <= 0 :
             for enemy in FirstEnemys:
                 FirstEnemys.remove(enemy)
@@ -402,8 +398,16 @@ def update():
                 boss_missile.remove(missile)
             for missile in Player_missile:
                 Player_missile.remove(missile)
-            Bossdie = 1
-            member.life = -1
+            if Bossdie == 0:
+                boss.remove(member)
+                newexplosion = Bomb_explosion(member.x, member.y)
+                newexplosion.explosion_sound.play()
+                bomb_explosion.append(newexplosion)
+                Bossdie = 1
+    if Bossdie >0:
+        player.timer += 1
+        if player.timer == 30:
+            game_framework.change_state(score_state)
 
 def draw():
     global BoundingBox
