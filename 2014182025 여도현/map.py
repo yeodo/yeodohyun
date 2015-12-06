@@ -18,11 +18,15 @@ class Map:
                 self.y += 10
             else:
                 self.y = 0
+        elif self.kind == 3:
+            self.image = load_image('resource\\score.png')
 
     def draw(self):
         if self.kind == 1:
             self.image.clip_draw(0, 0, 500, 750 + self.y, 250, 375)
         if self.kind == 2:
+            self.image.clip_draw(0, 0, 500, 750 + self.y, 250, 375)
+        if self.kind == 3:
             self.image.clip_draw(0, 0, 500, 750 + self.y, 250, 375)
 
     def __del__(self):

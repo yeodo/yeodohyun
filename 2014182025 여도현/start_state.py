@@ -11,6 +11,8 @@ image = None
 logo_time = 0.0
 def enter():
     global image
+    global sound
+    sound = 0
     open_canvas(500,750)
     image = load_image('resource\kpu_credit.png')
 def exit():
