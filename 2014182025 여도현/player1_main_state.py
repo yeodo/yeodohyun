@@ -156,13 +156,15 @@ def handle_events():
                         close_canvas()
                         game_framework.change_state(start_state)
                 if event.type == SDL_KEYDOWN and event.key == SDLK_b and player.state!= 0:
-                    newbomb = Bomb(player.x, player.y)
-                    newbomb.angle = 3
-                    bomb.append(newbomb)
-                    newbomb = Bomb(player.x, player.y)
-                    newbomb.angle = -3
-                    newbomb.angle = -3
-                    bomb.append(newbomb)
+                    if ui.bomb != 0:
+                        newbomb = Bomb(player.x, player.y)
+                        newbomb.angle = 3
+                        bomb.append(newbomb)
+                        newbomb = Bomb(player.x, player.y)
+                        newbomb.angle = -3
+                        newbomb.angle = -3
+                        bomb.append(newbomb)
+                        ui.bomb -= 1
                 if event.type == SDL_KEYDOWN and event.key == SDLK_h and player.state != 0:
                     if BoundingBox == 0:
                         BoundingBox = 1
@@ -340,6 +342,7 @@ def update():
             if collide(player,member):
                 player.get_sound.play()
                 item.remove(member)
+                ui.bomb += 1
                 player.missile_level = 2
                 player.missile_sound = load_wav('resource\\sound\\player_missile_level2.ogg')
                 player.missile_sound.set_volume(60)

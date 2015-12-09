@@ -9,7 +9,7 @@ class UI:
         self.playerlife = 2
         self.kind = 0
         self.font=load_font('resource\\ConsolaMalgun.TTF', 20 )
-        self.scorefont=load_font('resource\\ConsolaMalgun.TTF', 50 )
+        self.scorefont=load_font('resource\\ConsolaMalgun.TTF', 60 )
         self.time = 0.0
     def update(self):
         self.time = get_time()
@@ -19,8 +19,9 @@ class UI:
             self.font.draw(380,730,'SCORE %d ' %(self.score ))
             self.font.draw(20,20,'BOMB %d  LIFE %d' %(self.bomb , self.playerlife ))
         if self.kind == 1:
-            self.scorefont.draw(200,350,'SCORE %d ' %(self.score ))
-            self.font.draw(200,300,'regame push space')
+            self.scorefont.draw(180,350,'SCORE %d ' %(self.score ))
+            self.font.draw(180,300,'Restart : Space Bar')
+            self.font.draw(180,270,'End : Esc')
 
 
 def test_ui():
