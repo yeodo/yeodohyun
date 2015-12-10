@@ -6,10 +6,10 @@ class UI:
     def __init__(self):
         self.score = 0
         self.bomb = 0
-        self.playerlife = 2
+        self.playerlife = 10
         self.kind = 0
-        self.font=load_font('resource\\ConsolaMalgun.TTF', 20 )
-        self.scorefont=load_font('resource\\ConsolaMalgun.TTF', 60 )
+        self.font=load_font('resource\\ConsolaMalgun.TTF', 20)
+        self.scorefont=load_font('resource\\ConsolaMalgun.TTF', 60)
         self.time = 0.0
     def update(self):
         self.time = get_time()

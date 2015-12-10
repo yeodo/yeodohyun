@@ -91,7 +91,10 @@ class Player:
             if self.hit == 20:
                 self.state = 1
                 self.hit = 0
-                self.image = load_image('resource\\player\\player1_animation.png')
+                if self.kind == 1:
+                    self.image = load_image('resource\\player\\player1_animation.png')
+                if self.kind == 2:
+                    self.image = load_image('resource\\player\\player2_animation.png')
             #print('hit %d' %self.hit)
 
         delay(0.07)

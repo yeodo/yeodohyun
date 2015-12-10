@@ -13,7 +13,7 @@ class Map:
             else:
                 self.y = 20
         elif self.kind == 2:
-            self.image = load_image('resource\\background\\sky3.png')
+            self.image = load_image('resource\\background\\map2.png')
             if self.y < 750:
                 self.y += 10
             else:
