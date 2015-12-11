@@ -14,7 +14,8 @@ class Map:
                 self.y = 20
         elif self.kind == 2:
             self.image = load_image('resource\\background\\map2.png')
-            if self.y < 750:
+            self.image2 = load_image('resource\\kpu_credit.png')
+            if self.y < 400:
                 self.y += 10
             else:
                 self.y = 0
@@ -26,6 +27,8 @@ class Map:
             self.image.clip_draw(0, 0, 500, 750 + self.y, 250, 375)
         if self.kind == 2:
             self.image.clip_draw(0, 0, 500, 750 + self.y, 250, 375)
+            self.image2.clip_draw(0, 0, 400, 100, 0, 0)
+            self.image2.clip_draw(0, 0, 300, 100, 500, 750)
         if self.kind == 3:
             self.image.clip_draw(0, 0, 500, 750 + self.y, 250, 375)
 
